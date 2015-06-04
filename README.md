@@ -40,7 +40,7 @@ Printing json from this example results in
 ```
 Another way of writing the above example is manually with the JsonWriter.
 ```java
-JsonObject object = new JsonObject<>();
+JsonObject object = new JsonObject();
 object.put("name", "value");
 object.put("object", new HashMap<Object, Object>() {{
     put("key", "value");
