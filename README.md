@@ -3,6 +3,15 @@ Simple JSON library for encoding and decoding, written in Java (1.8).
 
 Inspired by JSON-Simple, the intentions behind pjson were to reduce the amount of boilerplate code required, and to allow for pretty-printing right off the bat. Encoding and decoding conform to the ECMA JSON specification (roughly speaking), and uses 4 spaces for indents while pretty printing.
 
+Value types supported are represented as:
+
+1. Object - HashMap
+2. String - Java String
+3. Array - ArrayList
+4. Number - Long or Double; integers of any precision are converted to Long, floating points are converted to Double.
+5. Boolean - Java Boolean
+6. Null or Undefined - Java null value
+
 Parsing is somewhat unstable and will be polished in the next update. However, initial performance tests suggest that encoding and decoding are faster, and produce less garbage for the JVM, than JSON-Simple by some 40% (measured in milliseconds). Granted, this was only confirmed on one machine. If you'd like to submit test cases, feel free to!
 
 
@@ -21,12 +30,14 @@ Parsing is somewhat unstable and will be polished in the next update. However, i
 
 ### Code examples:
 ###### <a name="encoding-basics"></a> Encoding
+Simple encoding of a JsonObject.
 ```java
 JsonObject object = new JsonObject();
 object.put("name", "value");
 String json = object.toString();
 ```
 ###### <a name="encoding-maps"></a>
+Since JsonObject inherits from HashMap, HashMaps may be used as JSON objects with the same behaviour.
 ```java
 HashMap<Object, Object> map = new HashMap<>();
 map.put("name", "value");
