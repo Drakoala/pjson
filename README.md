@@ -6,21 +6,34 @@ Inspired by JSON-Simple, the intentions behind pjson were to reduce the amount o
 Parsing is somewhat unstable and will be polished in the next update. However, initial performance tests suggest that encoding and decoding are faster, and produce less garbage for the JVM, than JSON-Simple by some 40% (measured in milliseconds). Granted, this was only confirmed on one machine. If you'd like to submit test cases, feel free to!
 
 
+[Encoding Basics](#encoding-basics)
+
+[Encoding with HashMaps](#encoding-maps)
+
+[Encoding Pretty Printing](#encoding-pretty)
+
+[Encoding with JsonWriter](#encoding-jswriter)
+
+[Decoding Basics](#decoding-basics)
+
+[Decoding Numbers](#decoding-numbers)
+
 
 ### Code examples:
-###### Encoding
+###### <a name="encoding-basics"></a> Encoding
 ```java
 JsonObject object = new JsonObject();
 object.put("name", "value");
 String json = object.toString();
 ```
+###### <a name="encoding-maps"></a>
 ```java
 HashMap<Object, Object> map = new HashMap<>();
 map.put("name", "value");
 String json = JsonObject.encode(map);
 ```
 Printing json from either example results in `{"name":"value"}`.
-###### Encoding with Pretty Printing
+###### <a name="encoding-pretty"></a> Encoding with Pretty Printing
 ```java
 HashMap<Object, Object> map = new HashMap<>();
 map.put("name", "value");
@@ -38,6 +51,7 @@ Printing json from this example results in
     }
 }
 ```
+###### <a name="encoding-jswriter"></a> Encoding with JsonWriter
 Another way of writing the above example is manually with the JsonWriter.
 ```java
 JsonObject object = new JsonObject();
@@ -50,8 +64,16 @@ object.writeJson(writer);
 String json = writer.toString();
 ```
 This example prints the same as the above pretty printing example, and is potentially faster as doing so skips determining the type of the initial value and writes it as an object.
-###### Decoding
+###### <a name="decoding-basics"></a> Decoding
 Consider the above pretty printed JSON, represented as a String named json. To decode it, simply pass it to the decode method, and cast the returned object to a JsonObject. If all is well, the object is populated properly. If not, as with all aspects of the API, an exception is thrown.
 ```java
 JsonObject object = (JsonObject)JsonObject.decode(json);
+```
+
+###### <a name="decoding-numbers"></a>Decoding Numbers
+Numbers are internally represented as Long or Double so as to not lose precision. Consider the following code, which obtains an integer and byte after parsing a simple JSON string.
+```java
+JsonObject object = (JsonObject)JsonObject.decode(json);
+byte b = ((Number)object.get("someByte")).byteValue();
+int i = ((Number)object.get("someInt")).intValue();
 ```
