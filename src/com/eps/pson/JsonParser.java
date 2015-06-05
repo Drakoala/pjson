@@ -2,10 +2,13 @@ package com.eps.pson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 // Internal
 // Set of methods for parsing JSON values.
 final class JsonParser {
+    private static final Pattern PT_LONG = Pattern.compile("^[-+]?[0-9]+$");
+    private static final Pattern PT_DOUBLE = Pattern.compile("^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$");
     
     private JsonParser() {}
     
@@ -183,11 +186,17 @@ final class JsonParser {
         return null;
     }
     
-    private static double decodeNumber(String json, IntRef ref) {
+    private static Number decodeNumber(String json, IntRef ref) {
         clearWhitespace(json, ref);
         int lastIndex = getLastIndexOfNumber(json, ref);
         int len = (lastIndex - ref.value) + 1;
-        double value = Double.parseDouble(new String(json.toCharArray(), ref.value, len));
+        String v = new String(json.toCharArray(), ref.value, len);
+        Number value = null;
+        if(PT_LONG.matcher(v).matches()) {
+            value = Long.valueOf(Long.parseLong(v));
+        } else if(PT_DOUBLE.matcher(v).matches()) {
+            value = Double.valueOf(Double.parseDouble(v));
+        }
         ref.value = lastIndex + 1;
         return value;
     }

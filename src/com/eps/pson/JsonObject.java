@@ -75,14 +75,8 @@ public class JsonObject extends LinkedHashMap<Object, Object> implements JsonSer
                 out.write(v.toString());
             }
             return;
-        } else if(value instanceof Float) {
-            Float v = (Float)value;
-            if(v.isInfinite() || v.isNaN()) {
-                out.write("null");
-            } else {
-                out.write(v.toString());
-            }
-            return;
+        } else if(value instanceof Number) {
+            out.write(value.toString());
         } else if(value instanceof JsonSerializable) {
             ((JsonSerializable)value).writeJson(out);
             return;
